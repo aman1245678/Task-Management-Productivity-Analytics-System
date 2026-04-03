@@ -84,12 +84,10 @@ export const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // check valid ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return errorResponse(res, "Invalid task ID", 400);
     }
 
-    // find task
     const task = await Task.findOne({
       _id: id,
       userId: req.user.id
@@ -99,14 +97,12 @@ export const updateTask = async (req, res, next) => {
       return errorResponse(res, "Task not found", 404);
     }
 
-    // update fields
     const { title, description, timeSpent, status } = req.body;
 
     if (title !== undefined) task.title = title;
     if (description !== undefined) task.description = description;
     if (timeSpent !== undefined) task.timeSpent = timeSpent;
 
-    // optional status update
     if (status === "completed") {
       task.status = "completed";
       task.completedAt = new Date();
